@@ -1,0 +1,62 @@
+name: CI/CD
+
+on:
+  workflow_dispatch: #Github上でworkflowを手動実行するUIを有効にする
+    inputs:
+      ref:
+        description: branch|tag|SHA to checkout
+        default: 'main'
+        required: true
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest #GitHubの最新のUbuntu環境（仮想マシン）で実行。
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3 #GitHubリポジトリのソースコードをワークフローマシンに取得する。
+
+      - name: Create .env file
+        run: |
+          echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
+          echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
+          echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
+        # .env ファイルを作成し、GitHub Secrets に保存された 環境変数を設定 する。
+        # TZはTimeZone 設定
+
+      - name: Build and run Docker containers
+        run: |
+          docker compose build --no-cache
+          docker compose up -d
+
+      - name: Wait for DB connection
+        run: |
+          for i in {1..30}; do
+            docker compose exec -T db pg_isready -U ${{ secrets.POSTGRES_USER }} && break || sleep 5
+          done
+
+      - name: Create DB
+        run: docker compose exec -T web rails db:create
+
+      - name: Run migrations
+        run: docker compose exec -T web rails db:migrate
+
+      - name: Load seed data
+        run: docker compose exec -T web rails db:seed
+
+      - name: Run Rubocop
+        run: docker compose exec -T web bundle exec rubocop
+
+      - name: Run RSpec
+        run: docker compose exec -T web bundle exec rspec
+
+      # - name: Upload coverage reports to Codecov
+      #   uses: codecov/codecov-action@v3
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     files: ./coverage/.resultset.json
+
+      - name: Stop and remove Docker containers
+        run: docker compose down
