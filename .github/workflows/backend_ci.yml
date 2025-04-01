@@ -47,7 +47,7 @@ jobs:
         run: docker compose exec -T web rails db:seed
 
       - name: Run Rubocop
-        run: docker compose exec -T web bundle exec rubocop
+        run: docker compose exec -T web bundle exec rubocop --auto-correct
 
       - name: Run RSpec
         run: docker compose exec -T web bundle exec rspec
