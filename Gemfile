@@ -38,6 +38,10 @@ gem "rack-cors"
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mswin mswin64 mingw x64_mingw ]
+  gem 'rspec-rails'
+  gem 'rubocop'
+  gem 'factory_bot_rails' # テストデータ生成用
+  gem 'faker' # ダミーデータ生成
 end
 
 group :development do
