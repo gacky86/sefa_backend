@@ -1,0 +1,2 @@
+class BookmarkVideo < ApplicationRecord
+end
