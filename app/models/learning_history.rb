@@ -1,0 +1,2 @@
+class LearningHistory < ApplicationRecord
+end
