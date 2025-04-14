@@ -39,6 +39,6 @@ class Api::V1::FlashcardsController < ApplicationController
   private
 
   def flashcard_params
-    params.require(:flashcard).permit(:user_id, :title, :description, :shared, :input_target, :output_progress)
+    params.require(:flashcard).permit(:user_id, :title, :description, :shared, :input_target, :output_target)
   end
 end
