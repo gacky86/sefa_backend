@@ -3,8 +3,5 @@ class Card < ApplicationRecord
   belongs_to :flashcard
 
   # Validation
-  # japanese 255
-  validates :japanese, length: { maximum: 255 }
-  # english 255
-  validates :english, length: { maximum: 255 }
+  validates :japanese, :english, length: { maximum: 255 }, presence: true
 end
