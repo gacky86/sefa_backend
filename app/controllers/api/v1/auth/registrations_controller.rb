@@ -4,6 +4,8 @@ class Api::V1::Auth::RegistrationsController < DeviseTokenAuth::RegistrationsCon
   private
 
   def sign_up_params
+    # 下記のstrong paramsはメール認証時のトライで書いたものだが、うまくいかなかったため、コメントアウト
+    # params.require(:registration).permit(:email, :password, :password_confirmation, :name)
     params.permit(:email, :password, :password_confirmation, :name)
   end
 end
