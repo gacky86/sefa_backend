@@ -46,19 +46,15 @@ class Api::V1::FlashcardsController < ApplicationController
   def fetch_card_to_learn
     flashcard = Flashcard.find(params[:id])
     learning_mode = params[:learning_mode]
-    card_to_learn = flashcard.select_card_by_interval(mode: learning_mode)
+    last_card_id = params[:last_card_id]
+    card_to_learn = flashcard.select_card_by_interval(mode: learning_mode, last_card_id: last_card_id)
     render json: card_to_learn, status: :ok
-    # if card_to_learn
-    #   render json: card_to_learn, status: :ok
-    # else
-    #   render json: { message: '本日学習するカードはありません' }, status: :ok
-    # end
   end
 
   private
 
   def flashcard_params
     params.require(:flashcard).permit(:user_id, :title, :description, :shared, :input_target, :output_target,
-                                      :only_mine, :learning_mode)
+                                      :only_mine, :learning_mode, :last_card_id)
   end
 end
