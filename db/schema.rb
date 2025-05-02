@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_04_11_011005) do
+ActiveRecord::Schema[7.1].define(version: 2025_05_01_072509) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -44,6 +44,21 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_11_011005) do
     t.integer "output_target"
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_flashcards_on_user_id"
+  end
+
+  create_table "learning_factors", force: :cascade do |t|
+    t.integer "input_step", default: 0
+    t.integer "input_ease_factor", default: 250
+    t.integer "input_interval", default: 0
+    t.integer "output_step", default: 0
+    t.integer "output_ease_factor", default: 250
+    t.integer "output_interval", default: 0
+    t.date "input_learned_at", default: -> { "CURRENT_DATE" }
+    t.date "output_learned_at", default: -> { "CURRENT_DATE" }
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "card_id", null: false
+    t.index ["card_id"], name: "index_learning_factors_on_card_id"
   end
 
   create_table "learning_histories", force: :cascade do |t|
@@ -80,4 +95,5 @@ ActiveRecord::Schema[7.1].define(version: 2025_04_11_011005) do
 
   add_foreign_key "cards", "flashcards"
   add_foreign_key "flashcards", "users"
+  add_foreign_key "learning_factors", "cards"
 end
