@@ -15,20 +15,11 @@ class Flashcard < ApplicationRecord
     interval_attr = "#{mode}_interval"
     learned_at_attr = "#{mode}_learned_at"
 
-    cards = self.cards
-    minimum_interval = learning_factors.minimum(interval_attr.to_sym)
     # 日換算したintervalが前回学習日~本日の期間よりも長い場合、本日学習するべきcardから除外する
-    todays_cards = cards.reject do |card|
-      interval = card.learning_factor.send(interval_attr)
-      learned_at = card.learning_factor.send(learned_at_attr)
-      if interval >= 60
-        interval_day = (interval / 60.0).ceil
-        interval_day > Time.zone.today - learned_at
-      else
-        false
-      end
-    end
+    todays_cards = select_todays_cards(interval_attr: interval_attr, learned_at_attr: learned_at_attr)
+
     # 本日学習分のcardsの中で、最もintervalが短いcardを選ぶ。ただし、同じintervalのcardがある場合を考慮して、ランダムに一枚選ぶ。
+    minimum_interval = learning_factors.minimum(interval_attr.to_sym)
     top_cards = todays_cards.select do |card|
       card.learning_factor.send(interval_attr) == minimum_interval
     end
@@ -47,5 +38,36 @@ class Flashcard < ApplicationRecord
     elsif top_cards.length > 1
       top_cards.sample
     end
+  end
+
+  def select_todays_cards(interval_attr:, learned_at_attr:)
+    cards = self.cards
+    cards.reject do |card|
+      interval = card.learning_factor.send(interval_attr)
+      learned_at = card.learning_factor.send(learned_at_attr)
+      if interval >= 60
+        interval_day = (interval / 60.0).ceil
+        interval_day > Time.zone.today - learned_at
+      else
+        false
+      end
+    end
+  end
+
+  def count_todays_cards
+    # 日換算したintervalが前回学習日~本日の期間よりも長い場合、本日学習するべきcardから除外する
+    todays_input_cards = select_todays_cards(interval_attr: 'input_interval', learned_at_attr: 'input_learned_at')
+    todays_output_cards = select_todays_cards(interval_attr: 'output_interval', learned_at_attr: 'output_learned_at')
+
+    new_input_cards = todays_input_cards.map do |card|
+      card.learning_factor.send('input_interval').zero?
+    end
+    new_output_cards = todays_output_cards.map do |card|
+      card.learning_factor.send('output_interval').zero?
+    end
+
+    # new_cardの枚数, review_cardの枚数
+    [new_input_cards.length, todays_input_cards.length - new_input_cards.length,
+     new_output_cards.length, todays_output_cards.length - new_output_cards.length]
   end
 end
