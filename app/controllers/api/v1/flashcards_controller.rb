@@ -51,6 +51,15 @@ class Api::V1::FlashcardsController < ApplicationController
     render json: card_to_learn, status: :ok
   end
 
+  def fetch_count_todays_cards
+    flashcard = Flashcard.find(params[:id])
+    new_input_cards_count, review_input_cards_count, new_output_cards_count, review_output_cards_count = flashcard.count_todays_cards
+    render json: {
+      input_cards_count: { new_cards_count: new_input_cards_count, review_cards_count: review_input_cards_count },
+      output_cards_count: { new_cards_count: new_output_cards_count, review_cards_count: review_output_cards_count }
+    }
+  end
+
   private
 
   def flashcard_params
