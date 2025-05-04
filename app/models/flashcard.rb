@@ -70,4 +70,15 @@ class Flashcard < ApplicationRecord
     [new_input_cards.length, todays_input_cards.length - new_input_cards.length,
      new_output_cards.length, todays_output_cards.length - new_output_cards.length]
   end
+
+  def calc_proficiency(mode:)
+    interval_attr = "#{mode}_interval"
+    # １年間のintervalを最大値として、それに対するintervalの割合を習熟度とする
+    max_interval = 60 * 30
+    learning_factors = self.learning_factors
+
+    interval_sum = learning_factors.sum(interval_attr.to_sym)
+
+    (interval_sum.to_f / max_interval * 100).round(0)
+  end
 end
