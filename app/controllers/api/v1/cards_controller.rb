@@ -57,6 +57,15 @@ class Api::V1::CardsController < ApplicationController
     end
   end
 
+  def fetch_review_interval
+    card = Card.find(params[:id])
+    learning_mode = params[:learning_mode]
+    again_interval, hard_interval, good_interval, easy_interval = card.calc_review_intervals(mode: learning_mode)
+    render json: { success: true,
+                   intervals: { again_interval: again_interval, hard_interval: hard_interval, good_interval: good_interval,
+                                easy_interval: easy_interval } }
+  end
+
   private
 
   def set_flashcard
