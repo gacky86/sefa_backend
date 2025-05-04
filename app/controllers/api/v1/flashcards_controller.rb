@@ -60,6 +60,17 @@ class Api::V1::FlashcardsController < ApplicationController
     }
   end
 
+  def fetch_flashcard_proficiency
+    flashcard = Flashcard.find(params[:id])
+    input_proficiency = flashcard.calc_proficiency(mode: 'input')
+    output_proficiency = flashcard.calc_proficiency(mode: 'output')
+
+    render json: {
+      input_proficiency: input_proficiency,
+      output_proficiency: output_proficiency
+    }
+  end
+
   private
 
   def flashcard_params
