@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       get '/flashcards/:id/card_to_learn', to: 'flashcards#fetch_card_to_learn'
       get '/flashcards/:id/count_todays_cards', to: 'flashcards#fetch_count_todays_cards'
       get '/flashcards/:id/flashcard_proficiency', to: 'flashcards#fetch_flashcard_proficiency'
+      get '/flashcards/:flashcard_id/cards/:id/fetch_review_interval', to: 'cards#fetch_review_interval'
 
       mount_devise_token_auth_for 'User', at: 'auth', controllers: {
         registrations: 'api/v1/auth/registrations'

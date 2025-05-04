@@ -9,6 +9,7 @@ class LearningFactor < ApplicationRecord
   def update_by(difficulty:, mode:)
     easy_bonus = 1.3
     threshold = 60
+    max_interval = 60 * 30
     ease_attr = "#{mode}_ease_factor"
     interval_attr = "#{mode}_interval"
 
@@ -24,20 +25,20 @@ class LearningFactor < ApplicationRecord
       if interval.zero?
         send("#{interval_attr}=", 6.0)
       else
-        send("#{interval_attr}=", interval * 1.2)
+        send("#{interval_attr}=", [interval * 1.2, max_interval].min)
       end
     when 'Good'
       if interval.zero?
         send("#{interval_attr}=", 10.0)
       else
-        send("#{interval_attr}=", interval * ease_factor.to_f / 100)
+        send("#{interval_attr}=", [interval * ease_factor.to_f / 100, max_interval].min)
       end
     when 'Easy'
       send("#{ease_attr}=", ease_factor + 15)
       if interval.zero?
         send("#{interval_attr}=", 3 * threshold)
       else
-        send("#{interval_attr}=", interval * ease_factor.to_f / 100 * easy_bonus)
+        send("#{interval_attr}=", [interval * ease_factor.to_f / 100 * easy_bonus, max_interval].min)
       end
     end
     save!
