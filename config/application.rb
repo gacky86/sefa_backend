@@ -28,6 +28,9 @@ module SefaBackend
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w(assets tasks))
 
+    # 追加
+    config.autoload_paths << Rails.root.join('app/services')
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
@@ -45,6 +48,7 @@ module SefaBackend
     config.session_store :cookie_store, key: '_interslice_session'
     config.middleware.use ActionDispatch::Cookies # Required for all session management
     config.middleware.use ActionDispatch::Session::CookieStore, config.session_options
+    config.middleware.use ActionDispatch::Flash
 
 
     # config.middleware.use ActionDispatch::Flash

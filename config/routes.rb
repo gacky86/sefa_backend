@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   namespace :api do
+    post 'gemini', to: 'gemini#check_boolean'
     namespace :v1 do
       resources :test, only: %i[index]
       resources :flashcards do
