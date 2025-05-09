@@ -1,4 +1,4 @@
-class Gemini::Flash::GenerateContent::Boolean
+class Gemini::Flash::GenerateContent::Sentence
   def initialize(system_instruction:, text:)
     @system_instruction = system_instruction
     @text = text

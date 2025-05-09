@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   namespace :api do
-    post 'gemini', to: 'gemini#check_boolean'
+    post 'gemini/generate_sentence', to: 'gemini#generate_sentence'
+    post 'youtube/search_by_keyword', to: 'youtube#search_by_keyword'
     namespace :v1 do
       resources :test, only: %i[index]
       resources :flashcards do
