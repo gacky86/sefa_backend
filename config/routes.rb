@@ -12,6 +12,7 @@ Rails.application.routes.draw do
           resources :learning_factors
         end
       end
+      resources :bookmark_videos, only: %i[index create destroy]
 
       get '/flashcards/:id/card_to_learn', to: 'flashcards#fetch_card_to_learn'
       get '/flashcards/:id/count_todays_cards', to: 'flashcards#fetch_count_todays_cards'

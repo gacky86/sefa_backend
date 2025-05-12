@@ -9,5 +9,7 @@ class User < ActiveRecord::Base
 
   # Association
   has_many :flashcards, dependent: :destroy
+  has_many :bookmark_videos, dependent: :destroy
+
   # Validation
 end
