@@ -77,7 +77,7 @@ class Api::V1::CardsController < ApplicationController
   end
 
   def card_params
-    params.require(:card).permit(:input_proficiency, :output_proficiency, :english, :japanese,
+    params.require(:card).permit(:input_proficiency, :output_proficiency, :english, :japanese, :context,
                                  :source_video_url, :reviewed_date, :source_video_timestamp, :difficulty, :learning_mode)
   end
 end
