@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   namespace :api do
     post 'gemini/generate_sentence', to: 'gemini#generate_sentence'
     post 'youtube/search_by_keyword', to: 'youtube#search_by_keyword'
+    post 'youtube/fetch_channel_thumbnail', to: 'youtube#fetch_channel_thumbnail'
     namespace :v1 do
       resources :test, only: %i[index]
       resources :flashcards do
