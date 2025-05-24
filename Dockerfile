@@ -3,6 +3,8 @@
 # Use the official Ruby image with version 3.2.0
 # node.jsのインストールは本番環境では下記のものを使わないとエラーが出た
 # 逆にローカルのdocker containerの環境ではapt-getの方でやらないとエラー
+# 2025/5/21 platform指定が必要かどうかは確認中
+FROM node:lts-alpine
 # FROM --platform=linux/amd64 node:lts-alpine
 FROM ruby:3.1.2
 
@@ -42,9 +44,9 @@ RUN gem install bundler && bundle install
 COPY . /sefa_backend
 
 # Add a script to be executed every time the container starts.
-# COPY entrypoint.sh /usr/bin/
-# RUN chmod +x /usr/bin/entrypoint.sh
-# ENTRYPOINT ["entrypoint.sh"]
+COPY entrypoint.sh /usr/bin/
+RUN chmod +x /usr/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
 # Expose the port the app runs on
 EXPOSE 3000
 
