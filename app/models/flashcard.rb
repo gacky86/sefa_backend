@@ -1,4 +1,6 @@
 class Flashcard < ApplicationRecord
+  LANGUAGES = %w[英語 ドイツ語 フランス語 ポルトガル語 スペイン語 オランダ語 イタリア語 トルコ語 韓国語 中国語 ロシア語].freeze
+
   # Association
   belongs_to :user
   has_many :cards, dependent: :destroy
@@ -8,6 +10,7 @@ class Flashcard < ApplicationRecord
   validates :title, length: { maximum: 60 }
   validates :description, length: { maximum: 120 }
   validates :input_target, :output_target, presence: true
+  validates :language, inclusion: { in: LANGUAGES }
   validates :title, presence: true, uniqueness: { scope: :user_id }
 
   # methods
